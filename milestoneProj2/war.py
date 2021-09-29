@@ -74,7 +74,7 @@ while game_on:
     print(f'Round {round_num}')
 
     if(len(player1.all_cards) == 0):
-        print('Player one lost, player 2 wins!')
+        print('Player 1 lost, player 2 wins!')
         game_on = False
         break
 
@@ -90,3 +90,35 @@ while game_on:
 
     player_two_cards = []
     player_two_cards.append(player2.remove_one())
+
+    # WAR
+    at_war = True
+    while at_war:
+        if player_one_cards[-1].value > player_two_cards[-1].value:
+            player1.add_cards(player_one_cards)
+            player1.add_cards(player_two_cards)
+            at_war = False
+        elif player_one_cards[-1].value < player_two_cards[-1].value:
+            player2.add_cards(player_one_cards)
+            player2.add_cards(player_two_cards)
+            at_war = False
+        else:
+            print('WAR!')
+            if(len(player1.all_cards) < 6 and len(player2.all_cards) < 6):
+                print('draw!')
+                game_on = False
+                break
+            elif(len(player1.all_cards) < 6):
+                print('Player 1 unable to declare war')
+                print('Player 2 wins')
+                game_on = False
+                break
+            elif(len(player2.all_cards) < 6):
+                print('Player 2 unable to declare war')
+                print('Player 1 wins')
+                game_on = False
+                break
+            else:
+                for num in range(5):
+                    player_one_cards.append(player1.remove_one())
+                    player_two_cards.append(player2.remove_one())
