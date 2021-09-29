@@ -15,11 +15,7 @@ class Card():
         self.value = values[rank]
 
     def __str__(self):
-        print(self.rank + " of " + self.suit)
-
-
-two_hearts = Card("Hearts", "Two")
-three_of_clubs = Card("Clubs", "Three")
+        return self.rank + " of " + self.suit
 
 
 class Deck():
@@ -31,12 +27,6 @@ class Deck():
                 created_card = Card(suit, rank)
                 self.all_cards.append(created_card)
 
-    def __str__(self):
-        i = 0
-        for card in self.all_cards:
-            print(card)
-            i += 1
-
     def shuffle(self):
         random.shuffle(self.all_cards)
 
@@ -44,9 +34,59 @@ class Deck():
         return self.all_cards.pop()
 
 
+class Player():
+
+    def __init__(self, name):
+        self.name = name
+        self.all_cards = []
+
+    def remove_one(self):
+        return self.all_cards.pop(0)
+
+    def add_cards(self, new_cards):
+        if type(new_cards) == type([]):
+            self.all_cards.extend(new_cards)
+        else:
+            self.all_cards.append(new_cards)
+
+    def __str__(self):
+        return f'player{self.name} has {len(self.all_cards)} cards'
+
+
+# Game setup
+player1 = Player("One")
+player2 = Player("Two")
+
 new_deck = Deck()
 new_deck.shuffle()
-deal_one = new_deck.deal_one()
-print('\n \n')
-print(deal_one)
-print(new_deck)
+
+for x in range(int(len(new_deck.all_cards)/2)):
+    player1.add_cards(new_deck.deal_one())
+    player2.add_cards(new_deck.deal_one())
+
+game_on = True
+
+# GAME ON
+
+round_num = 0
+while game_on:
+    round_num += 1
+    print(f'Round {round_num}')
+
+    if(len(player1.all_cards) == 0):
+        print('Player one lost, player 2 wins!')
+        game_on = False
+        break
+
+    if(len(player2.all_cards) == 0):
+        print("Player 2 lost, player 1 wins!")
+        game_on = False
+        break
+
+    # NEW ROUND
+    # current cards in play
+    player_one_cards = []
+    player_one_cards.append(player1.remove_one())
+
+    player_two_cards = []
+    player_two_cards.append(player2.remove_one())
